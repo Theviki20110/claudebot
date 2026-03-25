@@ -1,22 +1,23 @@
-# claudebot
+# telegram-claude-agent
 
-A Telegram bot that lets you interact with [Claude Code](https://github.com/anthropics/claude-code) as an AI agent directly from chat.
+A Telegram bot that lets you interact with [Claude Code](https://github.com/anthropics/claude-code) as an AI agent directly from chat. Supports both text and voice messages.
 
 ```
-User → Telegram Bot → Flask API → Claude Code CLI → response
+User (text/voice) → Telegram Bot → FastAPI server → Claude Code CLI → response
 ```
 
 Each user gets an isolated workspace and multi-turn conversation support via session IDs.
 
 ## How it works
 
-- **`bot_telegram.py`** — Telegram bot. Receives messages, calls the API, replies with the result.
-- **`claude_server.py`** — Flask server. Runs `claude` CLI as a subprocess and exposes a `/run` endpoint.
+- **`bot_telegram.py`** — Telegram bot. Receives text and voice messages, transcribes audio via OpenAI Whisper, forwards prompts to the Claude server.
+- **`claude_server.py`** — FastAPI server. Runs the `claude` CLI as a subprocess and exposes a `/run` endpoint.
 
 ## Requirements
 
 - Docker & Docker Compose
-- An `ANTHROPIC_API_KEY`
+- An `ANTHROPIC_API_KEY` from [console.anthropic.com](https://console.anthropic.com) (must start with `sk-ant-api03-`)
+- An `OPENAI_API_KEY` for Whisper transcription
 - A Telegram bot token (from [@BotFather](https://t.me/BotFather))
 
 ## Setup
@@ -29,16 +30,22 @@ Each user gets an isolated workspace and multi-turn conversation support via ses
 
 2. Create a `.env` file:
    ```env
-   ANTHROPIC_API_KEY=your_anthropic_key
-   TELEGRAM_BOT_TOKEN=your_telegram_token
+   ANTHROPIC_API_KEY=sk-ant-api03-...
+   OPENAI_API_KEY=sk-...
+   TELEGRAM_BOT_TOKEN=...
    ```
 
-3. Set the token and secret in the source files (or better, read them from env vars).
-
-4. Start with Docker Compose:
+3. Start with Docker Compose:
    ```bash
    docker compose up --build
    ```
+
+## Voice messages
+
+Send a voice message to the bot and it will:
+1. Transcribe it with OpenAI Whisper
+2. Show the transcription in chat
+3. Forward the text to Claude as a normal prompt
 
 ## Tools available to the agent
 
@@ -46,6 +53,6 @@ The Claude agent can use: `Read`, `Write`, `Edit`, `Glob`, `Grep`, `WebSearch`, 
 
 ## Notes
 
-- Each user's files live in `/workspace/<user_id>` inside the container.
+- Each user's files live in `./workspace/<user_id>`.
 - Sessions are kept in memory — they reset on restart.
 - Telegram messages are capped at 4096 characters; longer responses are split automatically.
