@@ -1,4 +1,4 @@
-# telegram-claude-agent
+# claudebot
 
 A Telegram bot that lets you interact with [Claude Code](https://github.com/anthropics/claude-code) as an AI agent directly from chat.
 
