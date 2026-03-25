@@ -1,0 +1,13 @@
+[project]
+name = "claudebot"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "dotenv>=0.9.9",
+    "fastapi>=0.135.2",
+    "flask>=3.1.3",
+    "openai>=2.29.0",
+    "python-telegram-bot>=22.7",
+    "requests>=2.33.0",
+    "uvicorn>=0.42.0",
+]

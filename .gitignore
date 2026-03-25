@@ -1,0 +1,12 @@
+.env
+.env.*
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+logs/
+workspace/
+.claude
+.venv
