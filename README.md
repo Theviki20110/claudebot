@@ -31,7 +31,6 @@ Each user gets an isolated workspace and multi-turn conversation support via ses
    ```env
    ANTHROPIC_API_KEY=your_anthropic_key
    TELEGRAM_BOT_TOKEN=your_telegram_token
-   API_SECRET=change_me
    ```
 
 3. Set the token and secret in the source files (or better, read them from env vars).
