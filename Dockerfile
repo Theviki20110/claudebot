@@ -1,15 +1,11 @@
 FROM python:3.12-slim
 
-# Install Node.js (for claude CLI) and curl
+# Node.js required at runtime by the Claude Code CLI (bundled with claude-agent-sdk)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
     && apt-get install -y --no-install-recommends nodejs \
     && rm -rf /var/lib/apt/lists/*
-
-RUN curl -fsSL https://claude.ai/install.sh | bash
-
-ENV PATH="/root/.local/bin:$PATH"
 
 WORKDIR /app
 
@@ -21,6 +17,6 @@ COPY uv.lock .
 
 RUN uv sync --no-cache
 
-COPY claude_server.py bot_telegram.py ./
+COPY bot_telegram.py ./
 
 RUN mkdir -p /workspace
